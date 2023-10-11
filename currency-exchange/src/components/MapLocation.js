@@ -1,25 +1,20 @@
 import React from 'react';
-import { GoogleMap, Marker } from 'react-google-maps';
+// import { GoogleMap, Marker } from 'react-google-maps';
+import Popup from 'reactjs-popup';
 
 const SelectedLocation = () => {
-    const [selectedLocation, setSelectedLocation] = React.useState({
-        lat: 37.78825,
-        lng: -122.4324,
-    });
-
-    const handleMapClick = (event) => {
-        setSelectedLocation(event.latLng);
-    };
 
     return (
         <div>
-            <GoogleMap
-                center={selectedLocation}
-                zoom={15}
-                onClick={handleMapClick}
-            >
-                <Marker position={selectedLocation} />
-            </GoogleMap>
-        </div>
+        <h4>Popup - GeeksforGeeks</h4>
+        <Popup trigger=
+            {<button> Click to open popup </button>}
+            position="right center">
+            <div>GeeksforGeeks</div>
+            <button>Click here</button>
+        </Popup>
+    </div>
     );
 };
+
+export default SelectedLocation;

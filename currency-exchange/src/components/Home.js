@@ -4,7 +4,7 @@ import Col from 'react-bootstrap/Col';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
-import { GoogleMap, StandaloneSearchBox, Marker } from "@react-google-maps/api";
+import { GoogleMap, StandaloneSearchBox, Marker ,LoadScript} from "@react-google-maps/api";
 import React from "react";
 import Popup from 'reactjs-popup';
 import CurrencyCovert from "./CurrencyConverter";
@@ -12,13 +12,15 @@ import 'react-dropdown/style.css';
 import '../css/CurrencyConverter.css';
 import SearchBarCard from './searchbar';
 import currencyImage from '../img/c.png';
+import SelectedLocation from './MapLocation'
 
 let markerArray = [];
 class Home extends React.Component{
   state = {
     currentLocation: { lat: 0, lng: 0 },
     markers: [],
-    bounds: null
+    bounds: null,
+    isOpen: false
   };
 
   onMapLoad = map => {
@@ -33,6 +35,12 @@ class Home extends React.Component{
     //   this.setState({ bounds: map.getBounds() });
     // });
   };
+
+  togglePopup = () => {
+    this.setState(
+        { isOpen: true }
+    )
+}
 
   onSBLoad = ref => {
     this.searchBox = ref;
@@ -49,7 +57,7 @@ class Home extends React.Component{
     console.log(markerArray);
   };
 
- PopupGfg() {
+ PopupGfg = () => {
     return (
         <div>
             <h4>Popup - GeeksforGeeks</h4>
@@ -72,8 +80,12 @@ class Home extends React.Component{
      <Card className="p-4 p-xl-2 my-xl-3" >
             <Row className="mb-15">
               <Col>
-              <Form.Control placeholder={"Select Location"}  type="location" name="location" className="my-2"  autoComplete="location" required="required" readOnly onClick={this.PopupGfg}/>
-      {/* <div>
+              {/* <Form.Control placeholder={"Select Location"}  type="location" name="location" className="my-2"  autoComplete="location" required="required" readOnly onClick={()=> this.PopupGfg}/> */}
+      <div>
+      <LoadScript
+        googleMapsApiKey="AIzaSyD_6yH-KwGXniV7oQPVangfCjx-veNl3a0"
+        libraries={["places"]}
+      >
         <div id="searchbox">
           <StandaloneSearchBox
             onLoad={this.onSBLoad}
@@ -86,8 +98,8 @@ class Home extends React.Component{
               style={{
                 boxSizing: `border-box`,
                 border: `1px solid transparent`,
-                width: `240px`,
-                height: `32px`,
+                width: `440px`,
+                height: `22px`,
                 padding: `0 12px`,
                 borderRadius: `3px`,
                 boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
@@ -107,14 +119,15 @@ class Home extends React.Component{
             center={this.state.currentLocation}
             zoom={10}
             onLoad={map => this.onMapLoad(map)}
-            mapContainerStyle={{ height: "400px", width: "800px" }}
+            mapContainerStyle={{ height: "400px", width: "1300px" }}
           >
             {this.state.markers.map((mark, index) => (
               <Marker key={index} position={mark} />
             ))}
           </GoogleMap>
         </div>
-      </div> */}
+        </LoadScript>
+      </div>
                     </Col>
             </Row>   
           </Card>
@@ -124,7 +137,7 @@ class Home extends React.Component{
           </div>
           <div style={{padding:'10px 500px 10px 500px'}}>
           <Card className="p-4 p-xl-2 my-xl-3">
-          <SearchBarCard></SearchBarCard>
+          <SearchBarCard location={this.state.bounds}></SearchBarCard>
           </Card>
           </div>
      </div>
