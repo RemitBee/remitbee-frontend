@@ -39,6 +39,7 @@ function AdminSignIn(){
        let responseData = await axios.post(loginUrl,requestBody).then(response=>{
           console.log(response)
         toast.success("Login Successfully",{theme:'colored'})
+        //window.location.href = 'https://solidhotelandresort.com/dashboard';
         
           
        }).catch(error=>{
