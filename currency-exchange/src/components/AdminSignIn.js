@@ -1,63 +1,63 @@
 // import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import React, { useEffect, useState ,useHistory} from 'react'
 import {  Link } from "react-router-dom";
-import Axios from 'axios';
+import axios from 'axios'
 import Swal from 'sweetalert2'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Navigation from "./Navigation";
+const loginUrl= 'http://16.16.26.112:8800/api/auth/login';
 
 function AdminSignIn(){
+   const [username,setUsername] = useState('')
+   const [password,setPassword] = useState('')
+   const [errorMsg,setErrMsg] = useState('')
+   const [success,setSuccess] = useState(false)
+   const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
-    const [data,setData] = useState({
-        adminEmail:'',
-        adminPassword:''
-    });
-
-    const handleInput = (e)=>{
-        setData({...data,[e.target.name]:e.target.value})
-    }
-
-    // const history = useHistory();
-
-    const login = async()=>{
-        try{
-            const credentials = {
-                email:data.adminEmail,
-                password:data.adminPassword
-            };
-
-            console.log(credentials);
-
-            const response = await Axios.get(`http://16.16.26.112:8800/api/auth`,{params: credentials});
-
-            if (response.status===200){
-                Swal.fire({
-                    title: 'Success',
-                    text: `${response.data.message}`,
-                    icon: 'success',
-                    confirmButtonText: 'Ok'
-                });
-                // history.push('/reader/home'); //Todo
-            }
-            
-        }catch(error){
-            console.log(error);
-            // if (error.response.status===404){
-            //     Swal.fire({
-            //         title: 'Not found!',
-            //         text: `${error.response.data.message}`,
-            //         icon: 'question',
-            //         confirmButtonText: 'Ok'
-            //     });
-            // }else if (error.response.status===401){
-            //     Swal.fire({
-            //         title: 'Invalid!',
-            //         text: `${error.response.data.message}`,
-            //         icon: 'error',
-            //         confirmButtonText: 'Ok'
-            //     });
-            // }
-            
+   const handleSubmit = async(e)=>{
+       e.preventDefault();
+        if(regex.test(username)){
+           setErrMsg("")
+           setUsername('')
+           setPassword('')
+           setSuccess(true)
+         
         }
+        if(!regex.test(username) && username!=""){
+           setErrMsg("Email is not valid")
+           toast.success("Email is not valid",{theme:'colored'})
+        }
+       
+   else{
+      
+       const requestBody={
+           email:username,
+           password:password
+       }
+        
+       let responseData = await axios.post(loginUrl,requestBody).then(response=>{
+          console.log(response)
+        toast.success("Login Successfully",{theme:'colored'})
+        
+          
+       }).catch(error=>{
+            toast.error("Please check email and password",{theme:'colored'})
+            })
+   }
+        
+   }
+    
+    const onChange = async(e)=>{
+        setUsername(e.target.value)
+        if(regex.test(e.target.value)){
+            setErrMsg("")	
+        }
+        // if(!regex.test(e.target.value)){
+        //     toast.success("Email is not validy",{theme:'colored'})
+           
+        // }
+        
     }
 
     return (
@@ -81,16 +81,18 @@ function AdminSignIn(){
                         <h5 class="card-title text-center fw-bold">Sign In</h5>
 
                         <label>Email</label>
-                        <input type="textEmail" className="form-control mb-2" name="email" value={data.email} onChange={handleInput}></input>
+                        <input type="textEmail" className="form-control mb-2" name="username" placeholder="john@example.com" onChange={onChange}
+                            value={username} ></input>
 
                         <label>Password</label>
-                        <input type="password" className="form-control mb-2" name="password" value={data.password} onChange={handleInput}></input>
+                        <input type="password" className="form-control mb-2" name="password"  placeholder="**************" onChange={(e) => setPassword(e.target.value)}
+                            value={password}></input>
 
                         <div className="d-flex justify-content-center align-items-center mb-3">
-                            <button class="btn btn-primary" onClick={login}>Sign In</button>
+                            <button class="btn btn-primary" onClick={handleSubmit}>Sign In</button>
                         </div>
 
-                        <label>Don't have an account ?<Link to='/reader/signup'> Register </Link></label>
+                        <label>Don't have an account ?<Link to='/AdminRegister'> Register </Link></label>
                     </div>
                 </div>
                 </div>
@@ -98,6 +100,7 @@ function AdminSignIn(){
               </div>
           </div>
         </div>
+        <ToastContainer />
     </div>
     );
 }
