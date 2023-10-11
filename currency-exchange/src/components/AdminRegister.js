@@ -78,7 +78,7 @@ function AdminRegister(props) {
                     window.location.href = 'http://localhost:3000/AdminSignIn';
                 })
                 .catch(err => {
-                    console.log(err)
+                    console.log(err) 
                     toast.error(err)
                 })
 
