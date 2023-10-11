@@ -75,7 +75,7 @@ function AdminRegister(props) {
                     console.log(responce)
                     setvalues(initialFValues)
                     toast.success("User Created Successfully, Please check this email", { theme: 'colored' })
-                    window.location.href = 'http://16.16.26.112:8080/AdminSignIn';
+                    window.location.href = 'http://localhost:3000/AdminSignIn';
                 })
                 .catch(err => {
                     console.log(err)
